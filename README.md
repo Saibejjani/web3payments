@@ -1,7 +1,7 @@
 # Bolckchain Unififed Payments System
 
 ![HomeScreen](https://raw.githubusercontent.com/Saibejjani/web3payments/main/client/images/sample/HomeScreen.png)
-Access this site [here text](https://web3payments.netlify.app/).
+Access this site [here](https://web3payments.netlify.app/).
 
 ## Introduction
 

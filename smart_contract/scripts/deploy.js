@@ -1,10 +1,12 @@
 const main = async () => {
-  const transactionsFactory = await hre.ethers.getContractFactory("Transactions");
-  const transactionsContract = await transactionsFactory.deploy();
+  const transactionsFactory = await hre.ethers.getContractFactory(
+    'Transactions'
+  );
+  const transactionsContract = await transactionsFactory.deploy('bups');
 
   await transactionsContract.deployed();
 
-  console.log("Transactions address: ", transactionsContract.address);
+  console.log('Transactions address: ', transactionsContract.address);
 };
 
 const runMain = async () => {

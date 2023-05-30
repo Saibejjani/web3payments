@@ -2,35 +2,34 @@ import React, { useContext } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import { SiEthereum } from "react-icons/si";
 import { BsInfoCircle } from "react-icons/bs";
-
 import { TransactionContext } from "../context/TransactionContext";
 import { shortenAddress } from "../utils/shortenAddress";
-import { Loader } from ".";
+import { Loader, Register } from ".";
+import { useState } from "react";
 
-const companyCommonStyles = "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
-
-const Input = ({ placeholder, name, type, value, handleChange }) => (
-  <input
-    placeholder={placeholder}
-    type={type}
-    step="0.0001"
-    value={value}
-    onChange={(e) => handleChange(e, name)}
-    className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-  />
-);
+const companyCommonStyles =
+  "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 
 const Welcome = () => {
-  const { currentAccount, connectWallet, handleChange, sendTransaction, formData, isLoading } = useContext(TransactionContext);
+  const [tranInfo, setTransInfo] = useState({});
 
-  const handleSubmit = (e) => {
-    const { addressTo, amount, keyword, message } = formData;
-
+  const {
+    currentAccount,
+    connectWallet,
+    isLoading,
+    balance,
+    sendTransaction,
+    userName,
+    userAddress,
+    verify,
+    accountName,
+  } = useContext(TransactionContext);
+  const handleSubmit = async (e) => {
+    const { addressTo, amount } = tranInfo;
     e.preventDefault();
-
-    if (!addressTo || !amount || !keyword || !message) return;
-
-    sendTransaction();
+    if (!addressTo || !amount) return;
+    await sendTransaction(tranInfo);
+    setTransInfo({ addressTo: "", amount: "" });
   };
 
   return (
@@ -41,7 +40,8 @@ const Welcome = () => {
             Send Crypto <br /> across the world
           </h1>
           <p className="text-left mt-5 text-white font-light md:w-9/12 w-11/12 text-base">
-            Explore the crypto world. Buy and sell cryptocurrencies easily on Krypto.
+            Explore the crypto world. Buy and sell cryptocurrencies easily on
+            Krypto.
           </p>
           {!currentAccount && (
             <button
@@ -81,37 +81,83 @@ const Welcome = () => {
                 <div className="w-10 h-10 rounded-full border-2 border-white flex justify-center items-center">
                   <SiEthereum fontSize={21} color="#fff" />
                 </div>
+                <p className="text-white font-semibold text-lg mt-1 flex">
+                  {Number(balance).toFixed(3)} ETH
+                </p>
+
                 <BsInfoCircle fontSize={17} color="#fff" />
               </div>
               <div>
-                <p className="text-white font-light text-sm">
+                <p className="text-white font-light text-sm ">
                   {shortenAddress(currentAccount)}
                 </p>
-                <p className="text-white font-semibold text-lg mt-1">
-                  Ethereum
+                <p className="text-white font-semibold text-lg mt-1 flex">
+                  {accountName.name ? accountName.name : <>Ethereum</>}
                 </p>
+                <p className=" text-white font-semibold text-lg mt-1 text-right"></p>
               </div>
             </div>
           </div>
+
           <div className="p-5 sm:w-96 w-full flex flex-col justify-start items-center blue-glassmorphism">
-            <Input placeholder="Address To" name="addressTo" type="text" handleChange={handleChange} />
-            <Input placeholder="Amount (ETH)" name="amount" type="number" handleChange={handleChange} />
-            <Input placeholder="Keyword (Gif)" name="keyword" type="text" handleChange={handleChange} />
-            <Input placeholder="Enter Message" name="message" type="text" handleChange={handleChange} />
+            {userName && (
+              <p className="p-5 text-white font-semibold">
+                {userName}
+                <br />
+                {userAddress && (
+                  <p className="text-white">
+                    {userAddress.length > 15
+                      ? shortenAddress(userAddress)
+                      : userAddress}
+                  </p>
+                )}
+              </p>
+            )}
+            <input
+              placeholder="addressTo"
+              type="text"
+              value={tranInfo.addressTo}
+              onChange={(e) =>
+                setTransInfo({
+                  ...tranInfo,
+                  addressTo: e.target.value,
+                })
+              }
+              className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+            />
+            <button
+              className="my-1 rounded-md p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism hover:bg-[#3d4f7c] "
+              onClick={() => {
+                verify(tranInfo.addressTo);
+              }}
+            >
+              verify
+            </button>
+
+            <input
+              placeholder="Amount"
+              type="number"
+              step="0.0001"
+              value={tranInfo.amount}
+              onChange={(e) =>
+                setTransInfo({ ...tranInfo, amount: e.target.value })
+              }
+              className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
+            />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
 
-            {isLoading
-              ? <Loader />
-              : (
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
-                >
-                  Send now
-                </button>
-              )}
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer"
+              >
+                Send now
+              </button>
+            )}
           </div>
         </div>
       </div>

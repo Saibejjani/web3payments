@@ -9,5 +9,5 @@ ReactDOM.render(
   <TransactionsProvider>
     <App />
   </TransactionsProvider>,
-  document.getElementById("root"),
+  document.getElementById("root")
 );

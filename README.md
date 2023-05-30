@@ -20,7 +20,8 @@ The Web3 Transaction App offers the following features:
 
 To use the Web3 Transaction App, follow these steps:
 
-1. **Access the App**: Visit the app's website or deploy it locally on your machine.
+1. **Access the App**: Visit the app's [website text](https://web3payments.netlify.app/)
+ or deploy it locally on your machine.
 
 2. **Transaction Sending**: To send a transaction, follow these steps:
    - Provide the recipient's Bups address or their full wallet address.
